@@ -2,6 +2,7 @@
 # Objetivo: Criar um algoritimo que gera um valor aleatório e eu tenho que ficar tentando até eu acertar
 
 import random 
+import PySimpleGUI as sg
 
 
 class ChuteONumero:
@@ -12,19 +13,34 @@ class ChuteONumero:
         self.tentar_novamente = True
     
     def Iniciar(self):
+        #layout
+        layout = [
+            [sg.Text("Seu chute", size=(20,0))],
+            [sg.Input(size=(18,0), key="ValorChute")],
+            [sg.Button("Chutar!")],
+            [sg.Output(size=(20,10))]
+        ]
+        #criar uma janela
+        self.janela = sg.Window("Chute o numero!", layout=layout)
+        #fazer alguma coisa com esses valores
+
         self.GerarNumeroAleatorio()
-        self.PedirValorAleatorio()
         try:
-            while self.tentar_novamente == True:
-                if int(self.valor_do_chute) > self.valor_aleatorio:
-                    print("Chute um valor mais baixo")
-                    self.PedirValorAleatorio()
-                elif int(self.valor_do_chute) < self.valor_aleatorio:
-                    print("Chute um valor mais alto!")
-                    self.PedirValorAleatorio()
-                if int(self.valor_do_chute) == self.valor_aleatorio:
-                    print("Parabens, voce acertou!!")
-                    self.tentar_novamente = False
+            while True:
+                # Receber Valores
+                self.evento, self.valores = self.janela.Read()
+                self.valor_do_chute = self.valores['ValorChute']
+                if self.evento == 'Chutar!':
+                    while self.tentar_novamente == True:
+                        if int(self.valor_do_chute) > self.valor_aleatorio:
+                            print("Chute um valor mais baixo")
+                            self.PedirValorAleatorio()
+                        elif int(self.valor_do_chute) < self.valor_aleatorio:
+                            print("Chute um valor mais alto!")
+                            self.PedirValorAleatorio()
+                        if int(self.valor_do_chute) == self.valor_aleatorio:
+                            print("Parabens, voce acertou!!")
+                            self.tentar_novamente = False
         except:
             print("Por favor Digitar apenas numeros!")
             self.Iniciar()
